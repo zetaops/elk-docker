@@ -32,6 +32,9 @@ trap _term SIGTERM
 rm -f /var/run/elasticsearch/elasticsearch.pid /var/run/logstash.pid \
   /var/run/kibana4.pid
 
+sed -i "s/SMTPUSER/$SMTPUSER/g" /etc/logstash/conf.d/30-output.conf
+sed -i "s/SMTPPASSWORD/$(echo $SMTPPASSWORD | sed -e 's/[]\/$*.^|[]/\\&/g')/" /etc/logstash/conf.d/30-output.conf
+
 
 ## start services
 
