@@ -35,6 +35,7 @@ rm -f /var/run/elasticsearch/elasticsearch.pid /var/run/logstash.pid \
 sed -i "s/SMTPUSER/$SMTPUSER/g" /etc/logstash/conf.d/30-output.conf
 sed -i "s/SMTPPASSWORD/$(echo $SMTPPASSWORD | sed -e 's/[]\/$*.^|[]/\\&/g')/" /etc/logstash/conf.d/30-output.conf
 
+sed -i "s/-f \/proc\/sys\/vm\/max_map_count/-w \/proc\/sys\/vm\/max_map_count/" /etc/init.d/elasticsearch
 
 ## start services
 
@@ -45,7 +46,7 @@ service logstash start
 # - https://github.com/elasticsearch/kibana/issues/3077
 counter=0
 while [ ! "$(curl localhost:9200 2> /dev/null)" -a $counter -lt 30  ]; do
-  sleep 1
+  sleep 10
   ((counter++))
   echo "waiting for Elasticsearch to be up ($counter/30)"
 done
