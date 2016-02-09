@@ -15,6 +15,15 @@ ENV REFRESHED_AT 2016-02-03
 #                                INSTALLATION
 ###############################################################################
 
+### Install Oracle Java
+ENV DEBIAN_FRONTEND noninteractive
+
+# Install Java 8
+RUN apt-get update -qq && apt-get install -y software-properties-common && \
+    apt-add-repository ppa:webupd8team/java -y && apt-get update -qq && \
+    echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
+    apt-get install -y oracle-java8-installer
+
 ### install Elasticsearch
 
 RUN apt-get update -qq \
@@ -26,7 +35,6 @@ RUN echo deb http://packages.elasticsearch.org/elasticsearch/2.x/debian stable m
 RUN apt-get update -qq \
  && apt-get install -qqy \
 		elasticsearch=2.2.0 \
-		openjdk-7-jdk \
  && apt-get clean
 
 
